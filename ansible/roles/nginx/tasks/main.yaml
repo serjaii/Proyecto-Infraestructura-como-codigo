@@ -6,6 +6,7 @@
       - php-mysql
       - php-mbstring
       - git
+      - acl
     state: present
     update_cache: yes
 
@@ -37,14 +38,28 @@
     - "{{virtualhosts}}"
   notify: restart nginx
 
-- name: Copiar aplicación Guestbook
-  ansible.builtin.copy:
-    src: app/
-    dest: "/{{ base_web_path }}/"
+- name: Mark git safe directory for the application
+  command: git config --global --add safe.directory "{{ base_web_path }}"
+  become: yes
+  become_user: root
+
+- name: Clonar repositorio de la aplicación Guestbook como root
+  git:
+    repo: "{{ guestbook_repo_url }}"
+    dest: "/{{ base_web_path }}"
+    version: main
+    force: yes
+  become: yes
+  become_user: root
+
+- name: Ajustar permisos del directorio de la aplicación
+  file:
+    path: "/{{ base_web_path }}"
     owner: www-data
     group: www-data
-    mode: '0644'
-    directory_mode: '0755'
+    recurse: yes
+  become: yes
+  become_user: root
 
 - name: Crear fichero de configuración config.php dentro de la aplicación
   ansible.builtin.template:

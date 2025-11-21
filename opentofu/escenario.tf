@@ -41,8 +41,8 @@ locals {
   ##############################################
 
   servers = {
-    apache2 = {
-      name       = "apache2"
+    nginx = {
+      name       = "nginx"
       memory     = 1024
       vcpu       = 1
       base_image = "debian13-base.qcow2"

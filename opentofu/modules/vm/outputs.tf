@@ -6,6 +6,5 @@ output "vm_info" {
       for iface in libvirt_domain.vm.network_interface :
       try(iface.addresses[0], "No disponible")
     ]
-
   }
 }

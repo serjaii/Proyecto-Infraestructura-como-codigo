@@ -40,13 +40,14 @@ variable "disks" {
 }
 
 variable "networks" {
-  description = "Lista de redes a conectar"
+  description = "Lista de redes asociadas a la VM, con network_id o network_name"
   type = list(object({
-    network_name   = string
+    network_id     = optional(string)
+    network_name   = optional(string)
     wait_for_lease = optional(bool)
   }))
-  default = []
 }
+
 
 variable "user_data" {
   description = "Ruta al archivo user-data.yaml"
