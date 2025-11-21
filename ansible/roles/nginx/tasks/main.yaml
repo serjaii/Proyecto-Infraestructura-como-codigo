@@ -1,0 +1,54 @@
+- name: Instalar paquetes necesarios para LEMP (Nginx, PHP)
+  apt:
+    name:
+      - nginx
+      - php-fpm
+      - php-mysql
+      - php-mbstring
+      - git
+    state: present
+    update_cache: yes
+
+- name: Configuración de server block (virtualhost)
+  template:
+    src: etc/nginx/server_block.j2
+    dest: /etc/nginx/sites-available/{{item["name"]}}.conf
+    owner: root
+    group: root
+  with_items:
+    - "{{virtualhosts}}"
+
+- name: Crear DocumentRoot si no existe
+  ansible.builtin.file:
+    path: /{{item["datos"]["documentroot"]}}
+    state: directory
+    owner: www-data
+    group: www-data
+    mode: '0755'
+  with_items:
+    - "{{virtualhosts}}"
+
+- name: Activación de los server blocks
+  file:
+    src: /etc/nginx/sites-available/{{item["name"]}}.conf
+    dest: /etc/nginx/sites-enabled/{{item["name"]}}.conf
+    state: link
+  with_items:
+    - "{{virtualhosts}}"
+  notify: restart nginx
+
+- name: Copiar aplicación Guestbook
+  ansible.builtin.copy:
+    src: app/
+    dest: "/{{ base_web_path }}/"
+    owner: www-data
+    group: www-data
+    mode: '0644'
+    directory_mode: '0755'
+
+- name: Crear fichero de configuración config.php dentro de la aplicación
+  ansible.builtin.template:
+    src: config.php.j2
+    dest: "/{{ base_web_path }}/config.php"
+    owner: www-data
+    group: www-data

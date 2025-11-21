@@ -3,10 +3,10 @@
   roles:
    - role: commons
 
-- hosts: servidores_web
+- hosts: nginx
   become: true
   roles:
-   - role: apache2
+    - role: nginx
 
 - hosts: servidores_bd
   become: true
