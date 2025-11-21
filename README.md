@@ -1,6 +1,6 @@
 
 Proyecto 1 - Infraestructura como código
-Objetivos del proyectoPermalink
+Objetivos del proyecto
 
     Crear un escenario virtualizado con OpenTofu
     Configurarlo de forma automática con ansible
@@ -16,7 +16,7 @@ Para realizar este proyecto vamos a partir del escenario 3 del repositorio opent
     Un servidor de base de datos que hemos conectado a la red NAT para que tenga internet y a la red aislada por donde se comunica con el servidor web.
     Las dos máquinas están conectadas a una red aislada sin DHCP que hemos llamado de configuración. Por esta red es por la que vamos a configurar el escenario por ansible. Al tener direcciones IP fijas podemos configurarlas en el inventario de ansible sin problemas.
 
-Configuración del escenarioPermalink
+Configuración del escenario
 
 A continuación tenemos un playbook ansible que configura el escenario:
 
