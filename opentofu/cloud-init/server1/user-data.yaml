@@ -14,4 +14,19 @@ chpasswd:
       password: asdasd
       type: text
 
+# Habilitar IP forwarding y configurar NAT
+bootcmd:
+  - echo 1 > /proc/sys/net/ipv4/ip_forward
 
+runcmd:
+  # Hacer permanente el IP forwarding
+  - echo "net.ipv4.ip_forward=1" >> /etc/sysctl.conf
+  - sysctl -p
+  # Instalar iptables-persistent para guardar las reglas
+  - apt-get update
+  - DEBIAN_FRONTEND=noninteractive apt-get install -y iptables-persistent
+  # Configurar NAT (masquerade) para las redes internas
+  - iptables -t nat -A POSTROUTING -s 192.168.201.0/24 -o ens3 -j MASQUERADE
+  - iptables -t nat -A POSTROUTING -s 10.0.0.0/24 -o ens3 -j MASQUERADE
+  # Guardar las reglas de iptables
+  - netfilter-persistent save
