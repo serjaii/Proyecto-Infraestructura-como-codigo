@@ -8,6 +8,13 @@ virtualhosts:
       errorlog: error_example
       accesslog: acceses_example
 
+  - name: phpmyadmin
+    datos:
+      nameserver: pma.example.org
+      documentroot: /var/www/phpmyadmin
+      errorlog: error_phpmyadmin
+      accesslog: access_phpmyadmin
+
 
 # Lista con los módulos que hay que activar
 mods_enabled:
@@ -23,7 +30,7 @@ base_web_path: "/var/www/example"
 
 # Variables de conexión a MariaDB para la aplicación guestbook
 
-guestbook_db_host: "mariadb.example.org"
+guestbook_db_host: "10.0.0.2"
 guestbook_db_user: "guestbook_user"
 guestbook_db_password: "guestbook_pass"
 guestbook_db_name: "guestbook_db"
